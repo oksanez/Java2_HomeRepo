@@ -1,18 +1,15 @@
-package main.java.lessonOne.circles;
+package main.java.lessonTwo.games.circles;
 
-import java.awt.*;
+import main.java.lessonTwo.games.common.GameCanvas;
+import main.java.lessonTwo.games.common.Sprite;
 
-/**
- * Java. Уровень 2. Урок 1
- *
- * @version 2019-09-22
- */
+import java.awt.Color;
+import java.awt.Graphics;
+
 public class Ball extends Sprite {
-
-    private float vx; // скорость по x
-    private float vy; // скорость по y
+    private float vx;
+    private float vy;
     private final Color color;
-
 
     Ball() {
         this.vx = 150.0F + (float)(Math.random() * 200.0D);
@@ -28,14 +25,12 @@ public class Ball extends Sprite {
         this.y = (float)y;
     }
 
-    @Override
-    void update(GameCanvas canvas, float deltaTime) {
-        this.x += this.vx * deltaTime; // расстояние x = скорость * время
+    public void update(GameCanvas canvas, float deltaTime) {
+        this.x += this.vx * deltaTime;
         this.y += this.vy * deltaTime;
-        // что бы не вышли за пределы поля
         if (this.getLeft() < (float)canvas.getLeft()) {
             this.setLeft((float)canvas.getLeft());
-            this.vx = -this.vx; // если вышли за границу, то меняем направление движения шарика
+            this.vx = -this.vx;
         }
 
         if (this.getRight() > (float)canvas.getRight()) {
@@ -52,13 +47,12 @@ public class Ball extends Sprite {
             this.setBottom((float)canvas.getBottom());
             this.vy = -this.vy;
         }
+
     }
 
-    @Override
-    void render(GameCanvas canvas, Graphics g) {
+    public void render(GameCanvas canvas, Graphics g) {
         g.setColor(this.color);
         g.fillOval((int)this.getLeft(), (int)this.getTop(), (int)this.getWidth(), (int)this.getHeight());
     }
 }
-
 
