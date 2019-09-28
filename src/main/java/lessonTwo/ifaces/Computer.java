@@ -3,7 +3,6 @@ package main.java.lessonTwo.ifaces;
 /**
  * Java. Уровень 2. Урок 2
  *
- * @author Oksana Nezlobina
  * @version 2019-09-24
  */
 public class Computer implements SocialFunctions {

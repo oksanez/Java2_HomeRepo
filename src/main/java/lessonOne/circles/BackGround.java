@@ -5,7 +5,6 @@ import java.awt.*;
 /**
  * Java. Уровень 2. Урок 1
  *
- * @author Oksana Nezlobina
  * @version 2019-09-22
  */
 public class BackGround extends GameCanvas {
