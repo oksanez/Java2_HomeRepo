@@ -7,22 +7,15 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.Thread.UncaughtExceptionHandler;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class ClientGUI extends JFrame implements ActionListener, UncaughtExceptionHandler {
+
     private static final int WIN_WIDTH = 400;
     private static final int WIN_HEIGHT = 300;
-    private final JTextArea log;
+
+    //Элементы (кнопки, чекбоксы, поля ввода и тд), которые есть на форме
+    private final JTextArea log; //блок с отпарвленными сообщениями
     private final JPanel panelTop;
     private final JTextField tfIPAddress;
     private final JTextField tfPort;
@@ -45,6 +38,7 @@ public class ClientGUI extends JFrame implements ActionListener, UncaughtExcepti
     }
 
     private ClientGUI() {
+        //заполняем дефолтными значениями форму
         this.log = new JTextArea();
         this.panelTop = new JPanel(new GridLayout(2, 3));
         this.tfIPAddress = new JTextField("127.0.0.1");
@@ -58,19 +52,22 @@ public class ClientGUI extends JFrame implements ActionListener, UncaughtExcepti
         this.tfMessage = new JTextField();
         this.btnSend = new JButton("Send");
         this.userList = new JList();
-        this.setDefaultCloseOperation(3);
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        this.setLocationRelativeTo((Component)null);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // полное закрытие приложения по нажатию на крестик
+        Thread.setDefaultUncaughtExceptionHandler(this); // обработка runtime исключений
+        this.setLocationRelativeTo((Component)null); //помещение фрейма в центр экрана (null)
         this.setSize(400, 300);
         this.setTitle("Chat client");
-        this.setAlwaysOnTop(false);
+        this.setAlwaysOnTop(false); // если true то приложение всегда будет поверх любых окон
         JScrollPane scrollLog = new JScrollPane(this.log);
         JScrollPane scrollUsers = new JScrollPane(this.userList);
-        this.log.setEditable(false);
+        this.log.setEditable(false); //поле log не редактируемое
         String[] users = new String[]{"user01", "user02", "user03", "user04", "user05", "user06", "user07", "user_with_a_very_long_name_in_the_chat"};
         this.userList.setListData(users);
         this.userList.setPreferredSize(new Dimension(100, 0));
         this.cbAlwaysOnTop.addActionListener(this);
+
+        // Расположение элементов на форму в нужном блоке
+        // Последовательность строк имеет значение
         this.panelTop.add(this.tfIPAddress);
         this.panelTop.add(this.tfPort);
         this.panelTop.add(this.cbAlwaysOnTop);
@@ -87,7 +84,7 @@ public class ClientGUI extends JFrame implements ActionListener, UncaughtExcepti
         this.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) { //метод вызывается когда происходит действие
         Object src = e.getSource();
         if (src == this.cbAlwaysOnTop) {
             this.setAlwaysOnTop(this.cbAlwaysOnTop.isSelected());
@@ -96,7 +93,7 @@ public class ClientGUI extends JFrame implements ActionListener, UncaughtExcepti
         }
     }
 
-    public void uncaughtException(Thread t, Throwable e) {
+    public void uncaughtException(Thread t, Throwable e) { // Метод вызывается, когда данный поток завершается из-за данного необработанного исключения
         e.printStackTrace();
         StackTraceElement[] ste = e.getStackTrace();
         String msg = String.format("Exception in thread %s: %s: %s\n\t at %s", t.getName(), e.getClass().getCanonicalName(), e.getMessage(), ste[0]);
