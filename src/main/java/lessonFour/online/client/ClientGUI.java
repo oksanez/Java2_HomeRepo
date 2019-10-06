@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.io.*;
 import java.lang.Thread.UncaughtExceptionHandler;
 import javax.swing.*;
 
@@ -82,6 +82,43 @@ public class ClientGUI extends JFrame implements ActionListener, UncaughtExcepti
         this.add(scrollLog, "Center");
         this.add(scrollUsers, "East");
         this.setVisible(true);
+
+        // отправка сообщения по кнопке Send
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!tfMessage.getText().trim().isEmpty()){
+                    addMsg();
+                    tfMessage.grabFocus(); //после отправки сообщения оставляем курсор в поле
+                    //записываем в файл весь лог
+                    saveToFile(log);
+                }
+            }
+        });
+
+        // отправка сообщения по enter
+        tfMessage.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    addMsg();
+                    tfMessage.setText("");
+                    tfMessage.grabFocus(); //оставляем курсор в поле
+                    //записываем в файл весь лог
+                    saveToFile(log);
+                }
+            }
+        });
+
+
+
+        //очищаем поле ввода после отправки сообщения
+        tfMessage.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                tfMessage.setText("");
+            }
+        });
     }
 
     public void actionPerformed(ActionEvent e) { //метод вызывается когда происходит действие
@@ -98,6 +135,22 @@ public class ClientGUI extends JFrame implements ActionListener, UncaughtExcepti
         StackTraceElement[] ste = e.getStackTrace();
         String msg = String.format("Exception in thread %s: %s: %s\n\t at %s", t.getName(), e.getClass().getCanonicalName(), e.getMessage(), ste[0]);
         JOptionPane.showMessageDialog((Component)null, msg, "Exception", 0);
+    }
+
+    // Метод отправки сообщения в log
+    public void addMsg(){
+        String msg = tfMessage.getText();
+        log.append(msg);
+        log.append("\n");
+    }
+
+    // Записываем в файл лог
+    static void saveToFile(JTextArea log) {
+        try (BufferedWriter fileOut = new BufferedWriter(new FileWriter("log.txt"))) {
+            log.write(fileOut);
+        } catch (IOException e) {
+            e.getMessage();
+        }
     }
 }
 
